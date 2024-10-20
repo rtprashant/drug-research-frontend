@@ -6,6 +6,7 @@ import AiResponseBox from './AiResponseBox';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPromptFailure, getPromptSuccess, getResponseFailure, getResponseRequest, getResponseSuccess, setPromptAndResponse } from '../../../redux/features/research/aiResearch';
 import axios from 'axios';
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 function AiChatBox() {
     const [query , setQuery ] = useState('')
@@ -35,7 +36,7 @@ function AiChatBox() {
         dispatch(getResponseRequest())
 
         try {
-            const response =  await axios.post('http://localhost:5000/api/v1/researchs/aiResearch',{query},{
+            const response =  await axios.post(`${apiUrl}/api/v1/researchs/aiResearch`,{query},{
                 headers:{
                     'Content-Type': 'application/json',
                 },

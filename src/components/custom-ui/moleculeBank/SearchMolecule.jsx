@@ -4,6 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
 import { searchMoleculeFailure, searchMoleculeStart, searchMoleculeStop, searchMoleculeSuccess } from '../../../redux/features/moleculeBank/searchMolecule';
 import { toast } from 'sonner';
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 function SearchMolecule() {
     const [moleculeName , setMoleculeName] = useState('')
@@ -29,7 +30,7 @@ function SearchMolecule() {
 
         try {
           dispatch(searchMoleculeStart())
-          const response = await axios.post("http://localhost:5000/api/v1/moleculeBanks/searchMolecule" , { moleculeName: name },{
+          const response = await axios.post(`${apiUrl}/api/v1/moleculeBanks/searchMolecule` , { moleculeName: name },{
               headers: {
                   'Content-Type': 'application/json',
               },

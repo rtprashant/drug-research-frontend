@@ -7,6 +7,7 @@ import { getMoleculeDetailsFailure, getMoleculeDetailsRequest, getMoleculeDetail
 import { toast } from 'sonner';
 import Skelton from './Skelton';
 import ResearchResponse from './ResearchResponse';
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 function Research() {
   const [title, setTitle] = useState("");
@@ -17,7 +18,7 @@ function Research() {
     event.preventDefault();
     dispatch(getMoleculeDetailsRequest())
     try {
-      const response = await axios.post('http://localhost:5000/api/v1/researchs/research', {
+      const response = await axios.post(`${apiUrl}/api/v1/researchs/research`, {
         title: title
   
       }, {

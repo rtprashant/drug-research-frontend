@@ -3,6 +3,7 @@ import MoleculeStructure from './MoleculeStructure';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import Skelton from '../research/Skelton'
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 function MoleculeList() {
     const [moleculeList, setMoleculeList] = useState([])
@@ -19,7 +20,7 @@ function MoleculeList() {
     useEffect(() => {
         const fetchMolecule = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/v1/moleculeBanks/getMolecule", {
+                const response = await axios.get(`${apiUrl}/api/v1/moleculeBanks/getMolecule`, {
                     headers: {
                         'Content-Type': 'application/json',
                     },

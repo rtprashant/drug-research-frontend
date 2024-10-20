@@ -7,7 +7,7 @@ import { registerFailed, registerStart, registerSuccess } from '../../../redux/f
 import axios from 'axios'
 import { LoaderCircle } from 'lucide-react'
 import { toast } from 'sonner'
-
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 
 function Signup() {
@@ -38,7 +38,7 @@ function Signup() {
             if(data.profileImage){
                 formData.append('profileImage', data.profileImage[0])
             }
-            const response = await axios.post('http://localhost:5000/api/v1/users/register', formData)
+            const response = await axios.post(`${apiUrl}/api/v1/users/register`, formData)
             console.log(response.data)
             if(response.data.success){
                 navigate('/login')

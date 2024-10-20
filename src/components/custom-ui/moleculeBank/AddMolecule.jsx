@@ -4,7 +4,8 @@ import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { addMoleculeFailure, addMoleculeStart, addMoleculeSuccess } from '../../../redux/features/moleculeBank/addMolecule'
 import { toast } from 'sonner'
-import { LoaderCircle } from 'lucide-react'
+import { AppleIcon, LoaderCircle } from 'lucide-react'
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 function AddMolecule() {
     const { register,
@@ -20,7 +21,7 @@ function AddMolecule() {
     const handleSubmitEvent = async (data) => {
         try {
             dispatch(addMoleculeStart())
-             const response = await axios.post("http://localhost:5000/api/v1/moleculeBanks/addMolecule", data, {
+             const response = await axios.post(`${apiUrl}/api/v1/moleculeBanks/addMolecule`, data, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
