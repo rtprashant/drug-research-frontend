@@ -19,7 +19,7 @@ import { useSelector ,useDispatch } from 'react-redux';
 import { logoutUser } from '../../redux/features/auth/userSlice';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 
 
@@ -27,7 +27,7 @@ function Navbar() {
     const { user } = useSelector(state => state.auth)
     const dispatch = useDispatch()
     const handleLogout = async() => {
-        await axios.post('http://localhost:5000/api/v1/users/logout',user ,{
+        await axios.post(`${apiUrl}/api/v1/users/logout`,user ,{
             headers:{
                 'Content-Type': 'application/json',
             },
