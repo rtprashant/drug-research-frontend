@@ -6,21 +6,21 @@ import { LoaderCircle } from 'lucide-react'
 import axios from 'axios'
 import { loginFailed, loginStart, loginSuccess } from '../../../redux/features/auth/userSlice'
 import { toast } from 'sonner'
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 function Login() {
   const { loading, error, user } = useSelector(state => state.auth)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
-
   const { register, formState: { errors }, handleSubmit, reset } = useForm()
   const [fromData, setFormData] = useState()
   const [loginViaUserName, setLoginViaUserName] = useState(false)
   const handleSubmitEvent = async (data) => {
-    
     try {
       dispatch(loginStart())
-      const res = await axios.post('http://localhost:5000/api/v1/users/login', data,
+      console.log(apiUrl);
+      
+      const res = await axios.post(`${apiUrl}/api/v1/users/login`, data,
         {
           headers: {
             'Content-Type': 'application/json',
