@@ -1,23 +1,23 @@
-import React, { useState , useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm } from "react-hook-form"
 import img from '../dna.svg'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { registerFailed, registerStart, registerSuccess } from '../../../redux/features/auth/userSlice'
+import { registerFailed, registerStart, registerSuccess , afterRegisterSuceess } from '../../../redux/features/auth/signupSlice'
 import axios from 'axios'
 import { LoaderCircle } from 'lucide-react'
 import { toast } from 'sonner'
+
 const apiUrl = import.meta.env.VITE_BACKEND_URL;
-
-
 function Signup() {
-    const { user, loading, error } = useSelector(state => state.auth)
+    const { signupUser,
+        signupLoading,
+        singupError} = useSelector(state => state.signup)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { register, handleSubmit, formState: { errors }, setError, clearErrors, reset } = useForm()
-    const handleSubmitEvent = async(data) => {
-       
-        
+const handleSubmitEvent = async (data) =>{
+
         if (data.confirmPassword !== data.password) {
             setError("confirmPassword", {
                 type: "manual",
@@ -27,50 +27,51 @@ function Signup() {
         } else {
             clearErrors("confirmPassword")
         }
-       
+
         try {
             dispatch(registerStart());
             const formData = new FormData()
-            const filedToAppend = ['fullName' , 'userName','email','password' ,'bio','role']
+            const filedToAppend = ['fullName', 'userName', 'email', 'password', 'bio', 'role']
             filedToAppend.forEach((filed) => {
                 formData.append(filed, data[filed])
             })
-            if(data.profileImage){
+            if (data.profileImage) {
                 formData.append('profileImage', data.profileImage[0])
             }
-            const response = await axios.post(`${apiUrl}/api/v1/users/register`, formData)
-            console.log(response.data)
-            if(response.data.success){
-                navigate('/login')
+            const response = await axios.post(`${apiUrl}/api/v1/users/register`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                withCredentials: true
+            })
+          
+            if (response.data.success) {
+                const profileImage  = response.data.data.profileImage
+                
+                
+                const userData = {
+                    fullName: data.fullName,
+                    userName: data.userName,
+                    email: data.email,
+                    bio: data.bio,
+                    role: data.role,
+                    profileImage: profileImage,  
+                };
+                dispatch(registerSuccess(userData))
+                navigate('/login',{ replace: true })
                 toast.success(response.data.message)
-                reset() 
+                reset()
             }
-            const { imageUrl } = response.data;
-            const userData = {
-                fullName: data.fullName,
-                userName: data.userName,
-                email: data.email,
-                bio: data.bio,
-                role: data.role,
-                profileImage: imageUrl,  // Store the URL, not the file
-              };
-            dispatch(registerSuccess(userData)) 
-              
+
         } catch (error) {
             console.log(error);
             toast.error(error.response?.data?.data)
-            dispatch(registerFailed(error.message || 'User registration failed'));   
+            dispatch(registerFailed(error.message || 'User registration failed'));
         }
-        
+
     }
-    useEffect(
-        ()=>{
-            if(user){
-                navigate('/login')
-            }
-        },[user]
-    )
-    
+   
+
     return (
         <div className=' w-[80%]   flex flex-col absolute'>
             <div className='text-[2vw] font-staatliches font-bold m-5 pt-10 '>Sign up</div>
@@ -215,11 +216,11 @@ function Signup() {
                                             value="admin"
                                             id='admin'
                                             {...register("role", { required: true })} />
-                                        <label htmlFor="Researcher">Researcher</label>
+                                        <label htmlFor="researcher">Researcher</label>
                                         <input
                                             type="radio"
-                                            value="Researcher"
-                                            id='Researcher'
+                                            value="researcher"
+                                            id='researcher'
                                             {...register("role", { required: true })} />
 
                                     </div>
@@ -230,8 +231,8 @@ function Signup() {
                             </div>
                             <button
                                 type='submit'
-                                disabled={loading}
-                                className={`border rounded-lg px-4 py-2 w-[20vw]   font-staatliches mt-5 ml-20 text-[20px] ${loading ? "bg-gray-400" : "bg-blue-500"}`}>{loading ? (
+                                disabled={signupLoading}
+                                className={`border rounded-lg px-4 py-2 w-[20vw]   font-staatliches mt-5 ml-20 text-[20px] ${signupLoading ? "bg-gray-400" : "bg-blue-500"}`}>{signupLoading ? (
                                     <div className='flex  ml-24'>
                                         <p className='pt-2 '>Signing In...</p>
                                         <LoaderCircle className='animate-spin mt-2' />

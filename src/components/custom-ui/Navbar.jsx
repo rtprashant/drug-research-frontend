@@ -16,7 +16,7 @@ import { LuLogOut } from "react-icons/lu";
 import { IoPersonSharp } from "react-icons/io5";
 import { BiSolidMessageRoundedDots } from "react-icons/bi";
 import { useSelector ,useDispatch } from 'react-redux';
-import { logoutUser } from '../../redux/features/auth/userSlice';
+import { logoutUser } from '../../redux/features/auth/loginSlice';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 const apiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -24,10 +24,11 @@ const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 
 function Navbar() {
-    const { user } = useSelector(state => state.auth)
+    const { loggedInUser } = useSelector(state => state.login)
+    // const { loggedInUser } = useSelector(state => state.user)
     const dispatch = useDispatch()
     const handleLogout = async() => {
-        await axios.post(`${apiUrl}/api/v1/users/logout`,user ,{
+        await axios.post(`${apiUrl}/api/v1/users/logout`,loggedInUser ,{
             headers:{
                 'Content-Type': 'application/json',
             },
@@ -42,8 +43,8 @@ function Navbar() {
                     <BiSolidMessageRoundedDots />
                 </div>
                 <div className='flex flex-col gap-0 mt font-roboto overflow-hidden '>
-                    <p>{user ? user?.fullName : "Prashant Kumar Rajput"}</p>
-                    <p className=' mt-[-0.4vw] w-20  overflow-hidden text-slate-500'>{user ? user?.role : "admin"}</p>
+                    <p>{loggedInUser ? loggedInUser?.fullName : "Prashant Kumar Rajput"}</p>
+                    <p className=' mt-[-0.4vw] w-20  overflow-hidden text-slate-500'>{loggedInUser ? loggedInUser?.role : "admin"}</p>
                 </div>
                 <div className='bg-white '>
 
@@ -55,7 +56,7 @@ function Navbar() {
                                     <NavigationMenuTrigger>
 
                                         <Avatar>
-                                            <AvatarImage src={user ? user.profileImage : "https://github.com/shadcn.png"} />
+                                            <AvatarImage src={loggedInUser ? loggedInUser.profileImage : "https://github.com/shadcn.png"} />
                                             <AvatarFallback>CN</AvatarFallback>
                                         </Avatar>
 
@@ -103,6 +104,7 @@ function Navbar() {
 
                 </div>
             </div>
+           
 
         </div>
     )

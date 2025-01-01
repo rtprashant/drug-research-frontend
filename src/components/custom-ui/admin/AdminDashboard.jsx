@@ -1,15 +1,19 @@
-import React, { useState } from 'react'
-import DashboardTopBox from './DashboardTopBox'
+import React, { useEffect, useState } from 'react'
+import Dashboard from '../dashboard/Dashboard'
+import DashboardTopBox from '../dashboard/DashboardTopBox'
 import { SiMoleculer } from "react-icons/si";
 import { GiMicroscope } from "react-icons/gi";
 import { MdMessage } from "react-icons/md";
 import { FaBalanceScale } from "react-icons/fa";
-import DashboardChatBox from './DashboardChatBox';
-import DashboardMoleculeHistory from './DashboardMoleculeHistory';
-import { useSelector ,useDispatch } from 'react-redux';
+import MolecucleDetails from './MolecucleDetails';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { toast } from 'sonner';
 import OtpBox from '../OtpBox';
+import { loginSuccess } from '../../../redux/features/auth/loginSlice';
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
-function Dashboard() {
+function AdminDashboard() {
   const { loggedInUser } = useSelector(state => state.login)
   const dispatch = useDispatch()
   const [otpBox, setOtpBox] = useState(false)
@@ -20,7 +24,6 @@ function Dashboard() {
       info: 'Get access to more molecules',
       path: '/moleculebank',
       icon: SiMoleculer
-
     },
     {
       id: 2,
@@ -119,10 +122,7 @@ function Dashboard() {
           </div>
         )
       }
-
-
       <div className='flex flex-col gap-5'>
-
         <div className='w-full p-10 flex justify-between '>
           {topBox.map((item) => (
             <div key={item.id}>
@@ -135,19 +135,10 @@ function Dashboard() {
 
           ))}
         </div>
-        <div className='p-10 flex gap-5 justify-evenly'>
-          <div className=' '>
-            <DashboardChatBox />
-          </div>
-          <div>
-            <DashboardMoleculeHistory />
-          </div>
-
-
-        </div>
+        <MolecucleDetails />
       </div>
     </div>
   )
 }
 
-export default Dashboard
+export default AdminDashboard

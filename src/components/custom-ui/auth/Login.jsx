@@ -4,12 +4,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { LoaderCircle } from 'lucide-react'
 import axios from 'axios'
-import { loginFailed, loginStart, loginSuccess } from '../../../redux/features/auth/userSlice'
+import { loginFailed, loginStart, loginSuccess } from '../../../redux/features/auth/loginSlice'
 import { toast } from 'sonner'
 const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 function Login() {
-  const { loading, error, user } = useSelector(state => state.auth)
+  const {  loggedInUser,
+    loggedInLoading,
+    loggedInError } = useSelector(state => state.login)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { register, formState: { errors }, handleSubmit, reset } = useForm()
@@ -31,10 +33,12 @@ function Login() {
         }
       ) 
       if(res.data.success){
-        navigate('/')
         dispatch(loginSuccess(res.data.data.user))
+        navigate('/')
         toast.success('Login Successfull') 
       } 
+     
+      
     } catch (error) {
       dispatch(loginFailed(error.response?.data?.message || 'Something went wrong'))
       if(error.response){
@@ -52,11 +56,13 @@ function Login() {
   }
   useEffect(
         ()=>{
-            if(user){
+            if( loggedInUser){
                 navigate('/')
             }
-        },[user]
+        },[ loggedInUser]
     )
+
+   
   return (
     <div className=' w-[80%]   flex flex-col absolute '>
       <div className='text-[2vw] font-staatliches font-bold m-5 pt-10 '>Login</div>
@@ -145,11 +151,11 @@ function Login() {
                     value="admin"
                     id='admin'
                     {...register("role", { required: true })} />
-                  <label htmlFor="Researcher">Researcher</label>
+                  <label htmlFor="researcher">Researcher</label>
                   <input
                     type="radio"
-                    value="Researcher"
-                    id='Researcher'
+                    value="researcher"
+                    id='researcher'
                     {...register("role", { required: true })} />
 
                 </div>
@@ -159,8 +165,8 @@ function Login() {
               </div>
               <button
                 type='submit'
-                disabled={loading}
-                className={`border rounded-lg px-4 py-2 w-[20vw]   font-staatliches mt-5 ml-20 text-[20px] ${loading ? "bg-gray-400" : "bg-blue-500"}`}>{loading ? (
+                disabled={loggedInLoading}
+                className={`border rounded-lg px-4 py-2 w-[20vw]   font-staatliches mt-5 ml-20 text-[20px] ${loggedInLoading ? "bg-gray-400" : "bg-blue-500"}`}>{loggedInLoading ? (
                   <div className='flex  ml-24'>
                     <p className='pt-2 '>Loging In...</p>
                     <LoaderCircle className='animate-spin mt-2' />
