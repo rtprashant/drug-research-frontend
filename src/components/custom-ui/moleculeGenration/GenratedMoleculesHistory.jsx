@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import MoleculeStructure from '../moleculeBank/MoleculeStructure'
+import React, { lazy, Suspense, useEffect, useState } from 'react'
 import axios from 'axios'
+import Skelton from './Skelton';
 const apiUrl = import.meta.env.VITE_BACKEND_URL;
+const MoleculeStructure = lazy(() => import('../moleculeBank/MoleculeStructure'))
 
 function GenratedMoleculesHistory() {
     const [moleculeHistory, setMoleculeHistory] = useState([])
@@ -81,11 +82,13 @@ function GenratedMoleculesHistory() {
                                     <div className=' w-full  flex-wrap flex'>
                                         {molecules.genratedModel.map((model)=>(
                                             <div key={model._id} className='flex flex-col flex-grow'>
-                                                <MoleculeStructure className='flex '
+                                              <Suspense fallback={Skelton}>
+                                              <MoleculeStructure className='flex '
                                             id={model._id}
                                             structure={model.structure}
                                             
                                         />
+                                              </Suspense>
                                         <p> Score :  {model.score}</p>
                                             </div>
                                         ))}
